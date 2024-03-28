@@ -17,35 +17,35 @@ from fractions import Fraction
 # where p = 4k + 3
 # 
 
-# def tonelli_shanks(n, p):
-#   x = p-1
-#   s = 0
-#   while(x%2!=1):
-#     x=x//2
-#     s+=1
-#   q = (p-1)//(2**s)
-#   z = 2
-#   while(isResidue(z,p)):
-#     z+=1
-#   M = s
-#   c = pow(z,q,p)
-#   t = pow(n,q,p)
-#   R = pow(n,(q+1)/2,p)
-#   while(True):
-#     if(t==0):
-#       return 0
-#     if(t==1):
-#       return R
-#     i = 0
-#     while(pow(t,2**i,p)!=1):
-#       i+=1
-#     b = pow(c,2**(M-i-1),p)
-#     M = i
-#     c = pow(b,2,p)
-#     t = (t*c)%p
-#     R = (R*b)%p
+def tonelli_shanks(n, p):
+  x = p-1
+  s = 0
+  while(x%2!=1):
+    x=x//2
+    s+=1
+  q = (p-1)//(2**s)
+  z = 2
+  while(isResidue(z,p)):
+    z+=1
+  M = s
+  c = pow(z,q,p)
+  t = pow(n,q,p)
+  R = pow(n,(q+1)/2,p)
+  while(True):
+    if(t==0):
+      return 0
+    if(t==1):
+      return R
+    i = 0
+    while(pow(t,2**i,p)!=1):
+      i+=1
+    b = pow(c,2**(M-i-1),p)
+    M = i
+    c = pow(b,2,p)
+    t = (t*c)%p
+    R = (R*b)%p
 
-def tonelli_shanks(p, n):
+def tonelli_shanks_new(p, n):
 	
 	if n % p == 0:
 		return 0
@@ -295,7 +295,7 @@ def twisted_edwards(a, d, x, p):
     fract = find_frac(y_2)
     denom_inv = mod_inverse(fract.denominator, p)
     y_2 = (fract.numerator * denom_inv) % p
-    return tonelli_shanks(p, y_2)
+    return tonelli_shanks_new(p, y_2)
 
 def find_y(a,d,x,p):
   return twisted_edwards(a, d, x, p)
@@ -318,4 +318,4 @@ def find_generator_point(a,p):
   fract = find_frac(y_2)
   denom_inv = mod_inverse(fract.denominator, p)
   y_2 = (fract.numerator * denom_inv) % p
-  return tonelli_shanks(p, y_2)
+  return tonelli_shanks_new(p, y_2)

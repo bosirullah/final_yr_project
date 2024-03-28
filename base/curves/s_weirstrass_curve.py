@@ -1,7 +1,7 @@
 from sympy import mod_inverse
 import numpy as np
 from datetime import datetime
-from gmpy2 import mpz, legendre, powmod, invert
+from gmpy2 import legendre, powmod, invert, is_prime
 # 
 # tonelli_shanks() :- implementation of Tonelli-Shanks algorithm
 # 
@@ -15,35 +15,35 @@ from gmpy2 import mpz, legendre, powmod, invert
 # where p = 4k + 3
 # 
 
-# def tonelli_shanks(n, p):
-#   x = p-1
-#   s = 0
-#   while(x%2!=1):
-#     x=x//2
-#     s+=1
-#   q = (p-1)//(2**s)
-#   z = 2
-#   while(isResidue(z,p)):
-#     z+=1
-#   M = s
-#   c = pow(z,q,p)
-#   t = pow(n,q,p)
-#   R = pow(n,(q+1)/2,p)
-#   while(True):
-#     if(t==0):
-#       return 0
-#     if(t==1):
-#       return R
-#     i = 0
-#     while(pow(t,2**i,p)!=1):
-#       i+=1
-#     b = pow(c,2**(M-i-1),p)
-#     M = i
-#     c = pow(b,2,p)
-#     t = (t*c)%p
-#     R = (R*b)%p
+def tonelli_shanks(n, p):
+  x = p-1
+  s = 0
+  while(x%2!=1):
+    x=x//2
+    s+=1
+  q = (p-1)//(2**s)
+  z = 2
+  while(isResidue(z,p)):
+    z+=1
+  M = s
+  c = pow(z,q,p)
+  t = pow(n,q,p)
+  R = pow(n,(q+1)/2,p)
+  while(True):
+    if(t==0):
+      return 0
+    if(t==1):
+      return R
+    i = 0
+    while(pow(t,2**i,p)!=1):
+      i+=1
+    b = pow(c,2**(M-i-1),p)
+    M = i
+    c = pow(b,2,p)
+    t = (t*c)%p
+    R = (R*b)%p
 
-def tonelli_shanks(p,n):
+def tonelli_shanks_new(p,n):
 	
 	if n % p == 0:
 		return 0
@@ -287,7 +287,7 @@ def multiplypoint(a,d,p,p1, scalar):
 
 def short_weiertrass(a, b, x, p):
     y_2 = (x*x*x + a*x + b) % p
-    return tonelli_shanks(p, y_2)
+    return tonelli_shanks_new(p, y_2)
 
 def find_y(a,b,x,p):
     return short_weiertrass(a,b,x,p)
@@ -298,65 +298,56 @@ def find_generator_point(a,b,p):
     while True:
         y_2_candidate = (x * x * x + a * x + b) % p
         if pow(y_2_candidate, (p - 1) // 2, p) == 1:
-            y = tonelli_shanks(p, y_2_candidate)
+            y = tonelli_shanks_new(p, y_2_candidate)
             if y is not None:
                 return x, y
         x += 1
 
+def check_prime(m):
+    if is_prime(m):
+        return True
+    else:
+        return False
+
 def find_points(a, b, p):
     no_of_points = 0
-    x = mpz(0)
-    while x < p:
-        temp1 = pow(x, 3,p)
-        temp2 = (x * a) % p
-        temp3 = (temp2 + b) % p
-        xx = (temp3 + temp1) % p
+    for x in range(p):
+        xx = (x ** 3 + a * x + b) % p
         if xx == 0:
+            y = xx
             no_of_points += 1
-        ret = legendre(xx, p)
-        if ret == 1:
-            no_of_points += 1
-        x += 1
-    no_of_points += 1
+        else:
+            ret = legendre(xx, p)
+            if ret == 1:
+                temp1 = (p + 1) // 4
+                y = pow(xx, temp1, p)
+                no_of_points += 1
+                y = p - y
+                no_of_points += 1
+    no_of_points += 1  # Including the point at infinity.
     return no_of_points
 
 
 def add_point(a, b, p, xp, yp, xq, yq):
-    temp1 = (yq - yp) % p
-    temp2 = (xq - xp) % p
-
-    if temp2 == 0:
-        return 0, 0  # Point at infinity, as (xq - xp) is not invertible
-
-    mody = temp1 % p
-    modx = invert(temp2, p)
-
-    l = (modx * mody) % p
-
+    l = (yq - yp) * invert(xq - xp, p)
     xr = (l**2 - xp - xq) % p
     yr = (l * (xp - xr) - yp) % p
-
     return xr, yr
 
 def double_point(a, b, p, xp, yp):
-    if yp == 0:
-        return 0, 0  # Point at infinity
-
-    l = (invert(2 * yp, p) * (3 * xp**2 + a)) % p
-    xr = (l**2 - xp - xp) % p
+    l = (3 * xp**2 + a) * invert(2 * yp, p)
+    xr = (l**2 - 2 * xp) % p
     yr = (l * (xp - xr) - yp) % p
     return xr, yr
 
 def find_order(a, b, p, xp, yp):
-    xq, yq, xr, yr, c = xp, yp, 0, 0, 1  # Initialize variables
-
+    xq, yq = xp, yp
+    c = 1
     xr, yr = double_point(a, b, p, xq, yq)
-    if xr == yr == 0:
+    if xr == 0 and yr == 0:
         return 2
-
     c += 1
     xq, yq = xr, yr
-
     while True:
         c += 1
         if xp == xq:
@@ -366,5 +357,9 @@ def find_order(a, b, p, xp, yp):
             xq, yq = xr, yr
 
 
-# def find_order_of_curve(a,b,m):
-#   return find_points(a,b,m)
+def find_order_of_curve(a,b,m):
+  no_of_points = find_points(a,b,m)
+  return no_of_points
+
+def find_order_of_point(a,b,p,xp,yp):
+  return find_order(a, b, p, xp, yp)

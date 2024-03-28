@@ -2,7 +2,8 @@
 #montgomery curve : By^2 = x^3 + Ax^2 + x
 
 from sympy import mod_inverse, nextprime
-from typing import Union
+# from typing import Union
+from typing import Union, Tuple
 from fractions import Fraction
 import random
 
@@ -93,7 +94,7 @@ def power_modulo(a: int, b: int, n: int) -> int:
 #         un_cur = un_new
 #         vn_cur = vn_new
 
-def extended_gcd(a: int, b: int) -> Union[int, tuple[int, int, int]]:
+def extended_gcd(a: int, b: int) -> Union[int, Tuple[int, int, int]]:
     # optional check
     if a == 0:
         return b, 0, 1
@@ -131,18 +132,18 @@ def inverse_modulo(a: int, n: int) -> int:
     return b % n
 
 
-def legendre_symbol(a: int, p: int, /) -> int:
+def legendre_symbol(a: int, p: int) -> int:
     return power_modulo(a, (p - 1) >> 1, p)
 
 
-def _choose_b(p: int, /) -> int:
+def _choose_b(p: int) -> int:
     b = 2
     while legendre_symbol(b, p) == 1:
         b = random.randrange(2, p)
     return b
 
 
-def _tonelli_shanks_recursive(a: int, k: int, p: int, b: int, b_inverse: int, /):
+def _tonelli_shanks_recursive(a: int, k: int, p: int, b: int, b_inverse: int):
     """
     Computes a square root of a modulo prime p
     :param a: the number to take the square root of
@@ -175,7 +176,7 @@ def _tonelli_shanks_recursive(a: int, k: int, p: int, b: int, b_inverse: int, /)
     return power_modulo(a, (m + 1) >> 1, p)
 
 
-def tonelli_shanks(a: int, p: int, /):
+def tonelli_shanks(a: int, p: int):
     """
     Computes a square root of a modulo prime p
     :param a: the number to take the square root of
