@@ -150,7 +150,7 @@
       var layout = {
         xaxis: { title: "X-axis" },
         yaxis: { title: "Y-axis" },
-            {% if curve == '1' %}
+          {% if curve == '1' %}
       title: "Twisted Edwards Curve mod({{p}})",
         {% elif curve == '2' %}
       title: "Short Weirstrass Curve mod({{p}})",
@@ -208,10 +208,10 @@
     </div>
   </div>
   <div class="points-div mb-3">
-    <div class="col col-12 text-center p-1 border border-2">
-      <h5>({{0}},{{0}})</h5>
-    </div>
     <div class="row" id="points">
+      <div class="col col-12 text-center p-1 border border-2">
+        <h5>({{0}},{{0}})</h5>
+      </div>
       <!-- {% for i,j in Array %}
           <div id="{{i}},{{j}}" onclick="plot({{i}},{{j}})" class="col col-6 text-center p-1 border border-2"><h5>({{i}},{{j}})</h5></div>
           {% endfor %} -->
@@ -381,49 +381,54 @@
   function changed() {
     if (opt.value == '2') {
       x2_label.innerText = "x2: ";
+      x1_div.style.display = "flex";
+      y1_div.style.display = "flex";
       x2_div.style.display = "flex";
       y2_div.style.display = "flex";
       operator.innerText = "+";
     }
     else if (opt.value == '3') {
       x2_label.innerText = "x2: ";
+      x1_div.style.display = "flex";
+      y1_div.style.display = "flex";
       x2_div.style.display = "flex";
       y2_div.style.display = "flex";
       operator.innerText = "-";
     }
     else if (opt.value == '4') {
       x2_label.innerText = "x2: ";
+      x1_div.style.display = "flex";
+      y1_div.style.display = "flex";
       x2_div.style.display = "none";
       y2_div.style.display = "none";
       operator.innerText = "x2";
     }
     else if (opt.value == '5') {
       x2_label.innerText = "Scalar: ";
+      x1_div.style.display = "flex";
+      y1_div.style.display = "flex";
       x2_div.style.display = "flex";
       y2_div.style.display = "none";
       operator.innerText = "x";
     }
     else if (opt.value == '6') {
+      x1_label.innerText = "x1: ";
+      x1_div.style.display = "flex";
       x2_div.style.display = "none";
       y2_div.style.display = "none";
       y1_div.style.display = "none";
       operator.style.display = "none";
     }
-    else if (opt.value == '7') {
+    else if (opt.value == '7' || opt.value == '8') {
       x1_div.style.display = "none";
       x2_div.style.display = "none";
       y2_div.style.display = "none";
       y1_div.style.display = "none";
-      operator.style.display = "none";
-    }
-    else if (opt.value == '8') {
-      x1_div.style.display = "none";
-      y1_div.style.display = "none";
-      x2_div.style.display = "none";
-      y2_div.style.display = "none";
       operator.style.display = "none";
     }
     else if (opt.value == '9') {
+      x1_div.style.display = "flex";
+      y1_div.style.display = "flex";
       x2_div.style.display = "none";
       y2_div.style.display = "none";
       operator.style.display = "none";
@@ -475,11 +480,13 @@
       var x = xarray[i];
       var y = yarray[i];
 
-      var div = document.createElement("div")
-      div.innerHTML = `<h5 id = ${x},${y} >(${x}, ${y})</h5>`
-      div.id = x + "," + y
-      div.className = "col col-12 text-center p-1 border border-2"
-      rowParentElement.appendChild(div)
+      if (x != 0 && y != 0) {
+        var div = document.createElement("div")
+        div.innerHTML = `<h5 id = ${x},${y} >(${x}, ${y})</h5>`
+        div.id = x + "," + y
+        div.className = "col col-12 text-center p-1 border border-2"
+        rowParentElement.appendChild(div)
+      }
 
       i++
     }

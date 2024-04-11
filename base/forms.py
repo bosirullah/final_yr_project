@@ -49,3 +49,17 @@ class opt_form(forms.Form):
         if (opt == '2' or opt == '3') and y2 == None:
             raise ValidationError("y2: Value required!")
         return y2
+    
+    # def clean_x1(self):
+    #     opt = self.cleaned_data['opt']
+    #     x1 = self.cleaned_data['x1']
+    #     if (opt == '2' or opt == '3' or opt == '5') and x1 == None:
+    #         raise ValidationError("x1: Value required!")
+    #     return x1
+    
+    # def clean_y1(self):
+    #     opt = self.cleaned_data['opt']
+    #     y1 = self.cleaned_data['y1']
+    #     if (opt == '2' or opt == '3') and y1 == None:
+    #         raise ValidationError("y1: Value required!")
+    #     return y1
