@@ -5,6 +5,7 @@ from base.curves import *
 from sympy import nextprime
 import math
 
+
 # Create your views here.
 # a = 0
 # d = 0
@@ -98,6 +99,7 @@ def calc(request, start=0):
                 x_res = 0
                 y_res = 0
                 new_y_res = 0
+                k = -1
 
                 if(opt == '2'):
                     (x_res,y_res) = curve.addpoints(a,d,new_p,(x1,y1), (x2,y2))
@@ -108,20 +110,23 @@ def calc(request, start=0):
                 elif(opt == '5'):
                     (x_res,y_res) = curve.multiplypoint(a,d,new_p,(x1,y1), x2)
                 elif(opt == '6'):
+                    # (x_res, y_res) = curve.bsgs(a,d,new_p,(x1,y1),(x2,y2))
+                    k = curve.bsgs(a,d,new_p,(x1,y1),(x2,y2))
+                elif(opt == '7'):
                     x_res = x1
                     (y_res) = curve.find_y(a,d,x_res,new_p)
                     new_y_res = new_p - y_res
-                elif(opt == '7'):
+                elif(opt == '8'):
                     if(curve == t_edwards):
                         (x_res,y_res) = curve.find_generator_point(a,new_p)
                     else:
                         (x_res,y_res) = curve.find_generator_point(a,d,new_p)
-                elif(opt == '8'):
-                    y_res = curve.find_order_of_curve(a,d,new_p)
                 elif(opt == '9'):
+                    y_res = curve.find_order_of_curve(a,d,new_p)
+                elif(opt == '10'):
                     y_res = curve.find_order_of_point(a,d,new_p,x1,y1)
 
-                return render(request,'base/calculate.html',{'opt_form': opt_form, 'a': a, 'd': d, 'p': new_p, 'xarray': points[0], 'yarray': points[1], 'Array': zip(points[0], points[1]), 'point_count': len(points[0]) + 1, 'x_res': x_res, 'y_res': y_res, 'new_y_res': new_y_res, 'result': True, 'start': start, 'end': min(new_p-1, start+999), 'prev': max(0, start-1000), 'next': min(new_p-1, start+1000), 'p_minus_1': new_p-1,'curve': opt1, 'a_label': a_label, 'd_label': d_label, 'p_label': p_label})
+                return render(request,'base/calculate.html',{'opt_form': opt_form, 'a': a, 'd': d, 'p': new_p, 'xarray': points[0], 'yarray': points[1], 'Array': zip(points[0], points[1]), 'point_count': len(points[0]) + 1, 'x_res': x_res, 'y_res': y_res, 'k':k, 'new_y_res': new_y_res, 'result': True, 'start': start, 'end': min(new_p-1, start+999), 'prev': max(0, start-1000), 'next': min(new_p-1, start+1000), 'p_minus_1': new_p-1,'curve': opt1, 'a_label': a_label, 'd_label': d_label, 'p_label': p_label})
         # GET
         return render(request,'base/calculate.html',{'opt_form': opt_form, 'a': a, 'd': d, 'p': new_p, 'xarray': points[0], 'yarray': points[1], 'Array': zip(points[0], points[1]), 'point_count': len(points[0]) + 1, 'start': start, 'end': min(new_p-1, start+999), 'prev': max(0, start-1000), 'next': min(new_p-1, start+1000), 'p_minus_1': new_p-1,'curve': opt1, 'a_label': a_label, 'd_label': d_label, 'p_label': p_label})
     

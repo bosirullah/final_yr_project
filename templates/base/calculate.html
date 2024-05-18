@@ -298,17 +298,20 @@
     <div class="col-12"></div>
 
     <div id="result_val" class="col-12 col-sm-8 col-md-6 col-xl-4">
-      {% if opt_form.opt.value == '6' and new_y_res != p%}
+      {% if opt_form.opt.value == '7' and new_y_res != p%}
       <input id="res_p" class="text-center my-3 fs-4 fw-bold"
         value="({{x_res}}, {{ y_res }}), ({{x_res}}, {{new_y_res}})" disabled>
 
-      {% elif opt_form.opt.value == '6' and new_y_res == p%}
+      {% elif k != 0 and k != -1%}
+      <input id="res_p" class="text-center my-3 fs-4 fw-bold" value="{{k}}" disabled></input>
+
+      {% elif opt_form.opt.value == '7' and new_y_res == p%}
       <input id="res_p" class="text-center my-3 fs-4 fw-bold" value="({{x_res}}, {{ y_res }})" disabled>
 
-      {% elif opt_form.opt.value == '8' %}
+      {% elif opt_form.opt.value == '9' %}
       <input id="res_p" class="text-center my-3 fs-4 fw-bold" value="( {{ y_res }} )" disabled>
 
-      {% elif opt_form.opt.value == '9' %}
+      {% elif opt_form.opt.value == '10' %}
       <input id="res_p" class="text-center my-3 fs-4 fw-bold" value="{{ y_res }}" disabled>
 
       {% elif y_res == -1 %}
@@ -385,6 +388,7 @@
       y1_div.style.display = "flex";
       x2_div.style.display = "flex";
       y2_div.style.display = "flex";
+      operator.style.display = "flex";
       operator.innerText = "+";
     }
     else if (opt.value == '3') {
@@ -393,6 +397,7 @@
       y1_div.style.display = "flex";
       x2_div.style.display = "flex";
       y2_div.style.display = "flex";
+      operator.style.display = "flex";
       operator.innerText = "-";
     }
     else if (opt.value == '4') {
@@ -401,6 +406,7 @@
       y1_div.style.display = "flex";
       x2_div.style.display = "none";
       y2_div.style.display = "none";
+      operator.style.display = "flex";
       operator.innerText = "x2";
     }
     else if (opt.value == '5') {
@@ -409,9 +415,19 @@
       y1_div.style.display = "flex";
       x2_div.style.display = "flex";
       y2_div.style.display = "none";
+      operator.style.display = "flex";
       operator.innerText = "x";
     }
     else if (opt.value == '6') {
+      x2_label.innerText = "x2: ";
+      x1_div.style.display = "flex";
+      y1_div.style.display = "flex";
+      x2_div.style.display = "flex";
+      y2_div.style.display = "flex";
+      operator.style.display = "flex";
+      operator.innerText = "/";
+    }
+    else if (opt.value == '7') {
       x1_label.innerText = "x1: ";
       x1_div.style.display = "flex";
       x2_div.style.display = "none";
@@ -419,14 +435,14 @@
       y1_div.style.display = "none";
       operator.style.display = "none";
     }
-    else if (opt.value == '7' || opt.value == '8') {
+    else if (opt.value == '8' || opt.value == '9') {
       x1_div.style.display = "none";
       x2_div.style.display = "none";
       y2_div.style.display = "none";
       y1_div.style.display = "none";
       operator.style.display = "none";
     }
-    else if (opt.value == '9') {
+    else if (opt.value == '10') {
       x1_div.style.display = "flex";
       y1_div.style.display = "flex";
       x2_div.style.display = "none";

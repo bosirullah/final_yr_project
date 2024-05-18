@@ -1,4 +1,5 @@
 from sympy import mod_inverse
+from math import sqrt
 import numpy as np
 from datetime import datetime
 from gmpy2 import legendre, powmod, invert, is_prime
@@ -363,3 +364,64 @@ def find_order_of_curve(a,b,m):
 
 def find_order_of_point(a,b,p,xp,yp):
   return find_order(a, b, p, xp, yp)
+
+# team 23
+
+def bsgs(a,d,p,p1,p2):
+  p1,p2 = p2, p1
+  x_arr, y_arr = generatePoints(a,d,p)
+  # n = len(x_arr) + 1
+  n = find_points(a,d,p)
+  m = sqrt(n)+1
+  m = int(m)
+  count = m
+  mp = multiplypoint(a, d, p, p1, m)
+  # ip = [[mpz(0) for _ in range(3)] for _ in range(m+1)]
+  # jmp = [[mpz(0) for _ in range(3)] for _ in range(m+1)]
+  ip = [[0 for _ in range(3)] for _ in range(count+1)]
+  jmp = [[0 for _ in range(3)] for _ in range(count+1)]
+
+  for i in range(1,count+1):
+        # t3 = mpz(i)
+        pd = multiplypoint(a, d, p, p1, i)
+        ip[i][0], ip[i][1], ip[i][2] = i, pd[0], pd[1]
+
+  for i in range(1,count+1):
+        # t5 = mpz(i)
+        pd = multiplypoint(a, d, p, mp, i)
+        jmp[i][0], jmp[i][1], jmp[i][2] = i, pd[0], pd[1]
+
+  for i in range(1,count+1):
+        if jmp[i][2] != 0: 
+            jmp[i][2] = p - jmp[i][2]
+
+  for i in range(1,count+1):
+        # t5 = jmp[i][1]
+        # t6 = jmp[i][2]
+        ptmp = (jmp[i][1], jmp[i][2])
+        ps = addpoints(a, d, p, p2, ptmp)
+        jmp[i][1] = ps[0]
+        jmp[i][2] = ps[1]
+
+  match, I, J = 0, 0, 0
+  for i in range(1,count+1):
+            # J = 0
+            # I += 1
+            if match == 1:
+                break
+            for j in range(1,count+1):
+                J += 1
+                if ip[i][1] == jmp[j][1]:
+                    if ip[i][2] == jmp[j][2]:
+                        J = j
+                        match = 1
+                        break
+            I += 1
+  
+  if match == 0:
+     return -1
+  else:
+     k = int(((m*J) + I) % n)
+    #  k = int(n)
+    #  return (k, 0)
+     return k

@@ -25,10 +25,11 @@ class opt_form(forms.Form):
     ('3', "Subtraction (-)"),
     ('4', "Doubling (x2)"),
     ('5', "Scalar Multiplication (xScalar)"),
-    ('6', "Find Y(x is given)"),
-    ('7', "Find Generator Point"),
-    ('8', "Order of the Curve"),
-    ('9', "Order of the Point")
+    ('6', "Division using bsgs (/)"),
+    ('7', "Find Y(x is given)"),
+    ('8', "Find Generator Point"),
+    ('9', "Order of the Curve"),
+    ('10', "Order of the Point")
     )
     opt = forms.ChoiceField(choices = opt_choices)
     x1 = forms.IntegerField(required=False)
@@ -39,14 +40,14 @@ class opt_form(forms.Form):
     def clean_x2(self):
         opt = self.cleaned_data['opt']
         x2 = self.cleaned_data['x2']
-        if (opt == '2' or opt == '3' or opt == '5') and x2 == None:
+        if (opt == '2' or opt == '3' or opt == '5' or opt == '6') and x2 == None:
             raise ValidationError("x2: Value required!")
         return x2
     
     def clean_y2(self):
         opt = self.cleaned_data['opt']
         y2 = self.cleaned_data['y2']
-        if (opt == '2' or opt == '3') and y2 == None:
+        if (opt == '2' or opt == '3' or opt == '6') and y2 == None:
             raise ValidationError("y2: Value required!")
         return y2
     
