@@ -28,12 +28,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY',"Hello")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
 #commented out the hosts for the time being for local development
 ALLOWED_HOSTS = [
     # 'twisted-edwards-calculator.herokuapp.com',
     # 'localhost'
+    'https://ecccalculator.onrender.com/'
 ]
 
 
