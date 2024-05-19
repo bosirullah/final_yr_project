@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 class adp_form(forms.Form):
     opt_choices = (
     ('1', "Twisted Edwards"),
-    ('2', "Short Weirstrass"),
+    ('2', "Short Weierstrass"),
     ('3', "Montgomery")
     )
     opt = forms.ChoiceField(choices = opt_choices)
@@ -26,7 +26,7 @@ class opt_form(forms.Form):
     ('4', "Doubling (x2)"),
     ('5', "Scalar Multiplication (xScalar)"),
     ('6', "Division using bsgs (/)"),
-    ('7', "Find Y(x is given)"),
+    ('7', "Find Points(x is given)"),
     ('8', "Find Generator Point"),
     ('9', "Order of the Curve"),
     ('10', "Order of the Point")

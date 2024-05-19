@@ -67,7 +67,7 @@ def calc(request, start=0):
         if opt1 == '1':
             curve = t_edwards
         elif opt1 == '2':
-            curve = s_weirstrass_curve
+            curve = s_weierstrass_curve
         elif opt1 == '3':
             curve = montgomery_curve
         points = curve.generatePoints(a, d, new_p, start)
